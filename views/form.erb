@@ -3,59 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>フォーム</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/21512c935b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form action="list" method="get">
-        <input type="text" name="x" id="x" placeholder="x" />
-        <input type="text" name="y" id="y" placeholder="y" />
-        <input type="submit" value="検索" />
+<div class="container">
+    <form action="list" method="get" class="form-horizontal">
+        <div class="form-group">
+            <label class="sr-only" for="x">Longitude</label>
+            <label for="x" class="col-md-2 control-label">経度</label>
+            <div class="col-md-10 input-group">
+                <input type="text" name="x" id="x" placeholder="x" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="y" class="col-md-2 control-label">緯度</label>
+            <div class="col-md-10 input-group">
+                <input type="text" id="y" placeholder="y" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary" >
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
     </form>
-    <h2>検索履歴</h2>
-    <table>
-        <% @histories.each do |history| %>
-            <tr>
-                <td><a href="/list?x=<%= history.x %>&y=<%= history.y %>"><%= history.x %>, <%= history.y %></a></td>
-                <td>
-                    <% if history.favorite %>
-                        <form action="<%= history.id %>/update" method="post">
-                            <input type="submit" value="解除">
-                        </form>
-                    <% else %>
-                        <form action="<%= history.id %>/update" method="post">
-                            <input type="submit" value="お気に入り">
-                        </form>
-                    <% end %>
-                </td>
-                <td>
-                    <form action="<%= history.id %>/delete" method="post">
-                        <input type="submit" value="[x]">
-                    </form>
-                </td>
-            </tr>
-        <% end %>
-    </table>
-    <h2>お気に入り</h2>
-    <% if @favorites.present?%>
-        <ul>
-            <% @favorites.each do |favorite| %>
-                <li>
-                    <table>
-                        <tr>
-                            <td><a href="/list?x=<%= favorite.x %>&y=<%= favorite.y %>"><%= favorite.x %>, <%= favorite.y %></a></td>
-                            <td>ひとことメモ：<%= favorite.comment%></td>
-                            <td>
-                                <form action="<%= favorite.id %>/update_comment" method="post">
-                                    <input type="text" name="comment" id="comment" placeholder="ひとことメモ" />
-                                    <input type="submit" value="追加" />
+    <div class="row">
+        <div class="col-md-6">
+            <h2>検索履歴</h2>
+            <table>
+                <% @histories.each do |history| %>
+                    <tr>
+                        <td><a href="/list?x=<%= history.x %>&y=<%= history.y %>"><%= history.x %>, <%= history.y %></a></td>
+                        <td>
+                            <% if history.favorite %>
+                                <form action="<%= history.id %>/update" method="post">
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-star"></i>
+                                    </button>
                                 </form>
-                            </td>
-                        </tr>
-                    </table>
-                </li>
+                            <% else %>
+                                <form action="<%= history.id %>/update" method="post">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                </form>
+                            <% end %>
+                        </td>
+                        <td>
+                            <form action="<%= history.id %>/delete" method="post">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% end %>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h2><i class="fas fa-star"></i>お気に入り</h2>
+            <% if @favorites.present?%>
+                <ul>
+                    <% @favorites.each do |favorite| %>
+                        <li>
+                            <table>
+                                <tr>
+                                    <td><a href="/list?x=<%= favorite.x %>&y=<%= favorite.y %>"><%= favorite.x %>, <%= favorite.y %></a></td>
+                                </tr>
+                                <tr>
+                                    <td>ひとことメモ：<%= favorite.comment%></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <form action="<%= favorite.id %>/update_comment" method="post">
+                                            <input type="text" name="comment" id="comment" placeholder="ひとことメモ" />
+                                            <button type="submit" value="追加" class="btn btn-primary">
+                                                <i class="far fa-plus-square"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <% end %>
+                </ul>
+            <% else %>
+                お気に入りが空です
             <% end %>
-        </ul>
-    <% else %>
-        お気に入りが空です
-    <% end %>
+        </div>
+    </div>
+</div>
 </body>
 </html>
