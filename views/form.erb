@@ -5,10 +5,57 @@
     <title>フォーム</title>
 </head>
 <body>
-<form action="list" method="get">
-    <input type="text" name="x" id="x" placeholder="x" />
-    <input type="text" name="y" id="y" placeholder="y" />
-    <input type="submit" value="検索" />
-</form>
+    <form action="list" method="get">
+        <input type="text" name="x" id="x" placeholder="x" />
+        <input type="text" name="y" id="y" placeholder="y" />
+        <input type="submit" value="検索" />
+    </form>
+    <h2>検索履歴</h2>
+    <table>
+        <% @histories.each do |history| %>
+            <tr>
+                <td><a href="/list?x=<%= history.x %>&y=<%= history.y %>"><%= history.x %>, <%= history.y %></a></td>
+                <td>
+                    <% if history.favorite %>
+                        <form action="<%= history.id %>/update" method="post">
+                            <input type="submit" value="解除">
+                        </form>
+                    <% else %>
+                        <form action="<%= history.id %>/update" method="post">
+                            <input type="submit" value="お気に入り">
+                        </form>
+                    <% end %>
+                </td>
+                <td>
+                    <form action="<%= history.id %>/delete" method="post">
+                        <input type="submit" value="[x]">
+                    </form>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+    <h2>お気に入り</h2>
+    <% if @favorites.present?%>
+        <ul>
+            <% @favorites.each do |favorite| %>
+                <li>
+                    <table>
+                        <tr>
+                            <td><a href="/list?x=<%= favorite.x %>&y=<%= favorite.y %>"><%= favorite.x %>, <%= favorite.y %></a></td>
+                            <td>ひとことメモ：<%= favorite.comment%></td>
+                            <td>
+                                <form action="<%= favorite.id %>/update_comment" method="post">
+                                    <input type="text" name="comment" id="comment" placeholder="ひとことメモ" />
+                                    <input type="submit" value="追加" />
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            <% end %>
+        </ul>
+    <% else %>
+        お気に入りが空です
+    <% end %>
 </body>
 </html>
