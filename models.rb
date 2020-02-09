@@ -1,4 +1,4 @@
-require 'bundle/setup'
+require 'bundler/setup'
 Bundler.require
 
 if development?
